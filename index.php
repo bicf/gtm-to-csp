@@ -128,7 +128,6 @@ class converter{
     
         <div class="form-group">
             <button type="submit" class="btn btn-default">Preview</button>
-            <input class="btn btn-success" name="download" type="submit" value="Download">
         </div>
     </form>
 </div>
