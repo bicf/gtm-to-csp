@@ -50,9 +50,26 @@ to:
 ```
 
 ## How to use it
+Need a php version  **>= 5.4.0**
 
+## How to use it - preview
 ```shell
 $ php -S 127.0.0.1:8000 index.php
 ```
 
-Need a php version  **>= 5.4.0**
+With a browser go to:
+`http://127.0.0.1:8000`
+
+![preview](https://raw.githubusercontent.com/devivan/gtm-to-csp/master/start.png)
+
+- **Save path**, is the path where the new javascript are saved on localhost (your compute).
+- **Scrip source prefix** is the prefix of JS sources
+- **GTM JSON** the original config file
+
+## Get the new JSON
+![download](https://raw.githubusercontent.com/devivan/gtm-to-csp/master/preview.png)
+- **Save path**, is the path where the new javascript are saved on localhost (your compute).
+- **Scrip source prefix** is the prefix of JS sources
+
+
+
