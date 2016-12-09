@@ -1,6 +1,6 @@
 # GTM-to-CSP
 
-This's a tool (PHP written) to suit a Google-Tag-Manager's json for the Content Security Policy.
+This's a tool (PHP written) to suit a "Google Tag Manager"'s json for the "Content Security Policy".
 
 GTM to CSP acts in two different ways:
 - creates a javascript file for each pieces of _inline_ javascript and replace'em in a new json.
