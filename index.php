@@ -110,7 +110,6 @@ class converter{
 <div class="row">
 <div class="col col-md-6"></div>
     <form action="" method="POST" enctype="multipart/form-data">
-        <div class="form-group"> <input type="hidden" name="MAX_FILE_SIZE" value="1000000"> </div>
         <div class="form-group">
             <label for="outDir">Save path</label>
             <input type="text" name="outDir" value="" class="form-control" id="outDir" placeholder="Save path">
@@ -167,6 +166,9 @@ HTML;
                 $_infos .="\n\n";
             }
         }
+        if($_infos == ""){
+            $_infos = "No javascript snippets was found in this GTM json";
+        }
         $_infos = "<pre>\n".htmlspecialchars($_infos)."</pre>";
         $_rv = /** lang html */ <<< HTML
 <!DOCTYPE html>
@@ -201,6 +203,8 @@ HTML;
         <div class="form-group">
             <button type="submit" class="btn btn-default">Preview</button>
             <input class="btn btn-success" name="download" type="submit" value="Download">
+            <input class="btn btn-warning" name="reset" type="submit" value="RESET">
+            
         </div>
     </form>
 </div>
@@ -220,45 +224,72 @@ HTML;
 
         return $_rv;
     }
+
+    public static function main() {
+        $buff = "Something wrong happens.";
+
+        $_o = new converter();
+        switch ($_SERVER['REQUEST_METHOD']) {
+
+            case 'GET':
+                $buff = $_o->index();
+                break;
+
+            case 'POST':
+                if(count($_POST)==0){
+                    $pms = ini_get('post_max_size');
+                    $ml = ini_get('memory_limit');
+                    $_out = <<< HTML
+<pre>
+    File too big, expand your PHP limits
+    post_max_size = $pms
+    memory_limit = $ml
+</pre>
+HTML;
+
+                    die($_out);
+                }
+                $_json = $_outDir = $_scriptPrefix = $_jsonSrc = null;
+                if (isset($_FILES['conf'])) {
+                    $_json = file_get_contents($_FILES['conf']['tmp_name']);
+                    $_jsonSrc = base64_encode($_json);
+                    $_outDir = ($_POST['outDir']!="")?$_POST['outDir']:".";
+                    $_scriptPrefix = $_POST['scriptPrefix'];
+                }
+
+                if (isset($_POST['jsonSrc'])) {
+                    $_jsonSrc = $_POST['jsonSrc'];
+                    $_json = base64_decode($_jsonSrc);
+                    $_outDir = ($_POST['outDir']!="")?$_POST['outDir']:".";
+                    $_scriptPrefix = $_POST['scriptPrefix'];
+                }
+
+                if (isset($_POST['reset'])) {
+                    $buff = $_o->index();
+                    break;
+                }
+
+                if (isset($_POST['download'])) {
+                    $file = "gtm-" . date('Ymd-His') . ".json";
+                    header("Cache-Control: public");
+                    header("Content-Description: File Transfer");
+                    header("Content-Disposition: attachment; filename=" . $file);
+                    header("Content-Transfer-Encoding: binary");
+                    header('Content-type: application/json');
+
+                    $buff = base64_decode($_POST['jsonDst']);
+                    break;
+                }
+
+                $_res = $_o->run($_json, $_outDir, $_scriptPrefix);
+                $buff = $_o->preview($_jsonSrc, $_outDir, $_scriptPrefix, $_res);
+
+                break;
+
+        }
+        return $buff;
+    }
+
 }
 
-$_o = new converter();
-switch ($_SERVER['REQUEST_METHOD']){
-
-    case 'GET':
-            echo $_o->index();
-        break;
-
-    case 'POST':
-        $a=1;
-        if(isset($_FILES['conf'])){
-            $_json = file_get_contents($_FILES['conf']['tmp_name']);
-            $_jsonSrc = base64_encode($_json);
-            $_outDir = $_POST['outDir'];
-            $_scriptPrefix = $_POST['scriptPrefix'];
-        }
-
-        if(isset($_POST['jsonSrc'])){
-            $_jsonSrc = $_POST['jsonSrc'];
-            $_json = base64_decode($_jsonSrc);
-            $_outDir = $_POST['outDir'];
-            $_scriptPrefix = $_POST['scriptPrefix'];
-        }
-
-        if(isset($_POST['download'])){
-            $file = "gtm-".date('Ymd-His').".json";
-            header("Cache-Control: public");
-            header("Content-Description: File Transfer");
-            header("Content-Disposition: attachment; filename=" . $file);
-            header("Content-Transfer-Encoding: binary");
-            header('Content-type: application/json');
-
-            die(base64_decode($_POST['jsonDst']));
-        }
-
-        $_res = $_o->run($_json,$_outDir,$_scriptPrefix);
-        echo $_o->preview($_jsonSrc,$_outDir,$_scriptPrefix,$_res);
-
-        break;
-
-}
+echo converter::main();
