@@ -3,8 +3,8 @@
 This's a tool (PHP written) to suit a Google-Tag-Manager's json for the Content Security Policy.
 
 GTM to CSP acts in two different ways:
-- calcs the hash all pieces of _inline_ javascript using **sha256**, **sha384** and **sha512** algorithm
 - creates a javascript file for each pieces of _inline_ javascript and replace'em in a new json.
+- calcs the hash all pieces of _inline_ javascript using **sha256**, **sha384** and **sha512** algorithm
 
 ## Usign the the hash inside the CSP header
 After upload the Json, foreach snippet of javascript you can see the hash signature already single quote wrapped: 
@@ -63,39 +63,61 @@ $ php -S 127.0.0.1:8000 index.php
 With a browser go to:
 `http://127.0.0.1:8000`
 
-### the starting page
+### The starting page
 
 
-![preview](https://raw.githubusercontent.com/devivan/gtm-to-csp/master/start.png)
+![start page](https://raw.githubusercontent.com/devivan/gtm-to-csp/master/start.png)
 
-#### required fields
+#### Required fields
 - **Save path**, is the path where the new javascript are saved on localhost (your compute).
 - **Scrip source prefix** is the prefix of JS sources
 - **GTM JSON** the original config file
 
-## Now you can get the HASHes
 
-A single TAG can contain multiple snippets of javascript
+## Getting the new JSON
+ 
+On the *result page* the download button allows to retrieve the new JSON
+ 
+![result page](https://raw.githubusercontent.com/devivan/gtm-to-csp/master/preview.png)
 
-![hashes](https://raw.githubusercontent.com/devivan/gtm-to-csp/master/multiple.png)
-
-Foreach javascript snippet of all TAGs will be produced three signatures: sha256, sha384 and sha512
-
-copy and paste these signature into the CSP header
-
-
-
-## or get the new JSON
-### first step, download the new JSON
-![download](https://raw.githubusercontent.com/devivan/gtm-to-csp/master/preview.png)
+#### required fields
 - **Save path**, is the path where the new javascript are saved on localhost (your compute).
 - **Scrip source prefix** is the prefix of JS sources
 
+These fields are already filled, but you can change them to better adapt to your needs. 
+Click **Preview** to regenerate the result page 
+
+### first step
+download the new JSON
+
 ### second step 
+Add the javascript files created into the **save path** to your project
+
+### third step 
 import the JSON into your container
 
 ### last step
 remember to publish your container! :D
+
+
+## Getting the HASHes
+
+### this solution IMHO is to avoid in case of a lot of snippets  
+
+On the *result page* there are some infos (in order of tag and appearance):
+- the ID and the Name of the tag
+- the filename of the new javascript file of a snippet (for debug purpose)
+- the HTML tag to include this new script  (for debug purpose)
+- the signatures
+ 
+Foreach javascript snippet of all TAGs will be produced three signatures: sha256, sha384 and sha512
+
+### The step
+copy and paste these signature into the CSP header
+
+A single TAG can contain multiple snippets of javascript
+
+![hashes](https://raw.githubusercontent.com/devivan/gtm-to-csp/master/multiple.png)
 
 
 
