@@ -67,9 +67,16 @@ With a browser go to:
 - **GTM JSON** the original config file
 
 ## Get the new JSON
+### first step, download the new JSON
 ![download](https://raw.githubusercontent.com/devivan/gtm-to-csp/master/preview.png)
 - **Save path**, is the path where the new javascript are saved on localhost (your compute).
 - **Scrip source prefix** is the prefix of JS sources
+
+### second step 
+import the JSON into your container
+
+### last step
+remember to publish your container! :D
 
 
 
