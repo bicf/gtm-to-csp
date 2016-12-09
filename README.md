@@ -27,7 +27,7 @@ script-src 'local'  www.other-stuff.com 'sha512-7CCgs3FeYW7RI1jQbU/pfkhrTtm1RMv7
 ## Using a new JSON
 
 After "upload" the json you can "download" a updated version where the _inline_ pieces of javascript ar replaced with external javascripts.
-Other html tags like _noscript_ or other _script_ tags **not** javascript are leaved untouched.
+Other html tags like _noscript_ or other _script_ tags **not** javascript or other _script_ tags **javascript** having the source (*src*) attribute are leaved untouched.
 
 ### Example
 From:
@@ -49,24 +49,43 @@ to:
 },
 ```
 
-## How to use it
+## How to start it
+
+### PHP requirements
 Need a php version  **>= 5.4.0**
 
-## How to use it - preview
+### start the internal server 
 ```shell
 $ php -S 127.0.0.1:8000 index.php
 ```
 
+### Operate via browser
 With a browser go to:
 `http://127.0.0.1:8000`
 
+### the starting page
+
+
 ![preview](https://raw.githubusercontent.com/devivan/gtm-to-csp/master/start.png)
 
+#### required fields
 - **Save path**, is the path where the new javascript are saved on localhost (your compute).
 - **Scrip source prefix** is the prefix of JS sources
 - **GTM JSON** the original config file
 
-## Get the new JSON
+## Now you can get the HASHes
+
+A single TAG can contain multiple snippets of javascript
+
+![hashes](https://raw.githubusercontent.com/devivan/gtm-to-csp/master/multiple.png)
+
+Foreach javascript snippet of all TAGs will be produced three signatures: sha256, sha384 and sha512
+
+copy and paste these signature into the CSP header
+
+
+
+## or get the new JSON
 ### first step, download the new JSON
 ![download](https://raw.githubusercontent.com/devivan/gtm-to-csp/master/preview.png)
 - **Save path**, is the path where the new javascript are saved on localhost (your compute).
